@@ -1,7 +1,7 @@
 // ==UserScript==
 // @author Peter Müller (https://github.com/Munter)
 // @name Lån og Spar netbank improved
-// @version 0.1
+// @version 0.2
 // @match https://www.lsb.dk/lsb/netbank/*
 // ==/UserScript==
 
@@ -11,7 +11,7 @@ var styles = [];
 styles.push('#container, .full { width: auto; margin: 0; }');
 
 // Break the 960 grid and make the layout fluid
-styles.push('#container { padding: 0 10px; }');
+styles.push('#container { padding: 0 53px; position: relative; z-index: 10; }');
 styles.push('#header, #nav, #main, #footer { width: auto; }');
 styles.push('#content { width: auto; float: none; margin-left: 150px; }');
 styles.push('#content #article { width: auto; float: none; }');
@@ -38,6 +38,7 @@ styles.push('#nav li.admin { float: right; }');
 styles.push('#nav li a { border-left: 1px solid white; border-right: 1px solid #bcbcbc; padding: 9px 18px 8px; }');
 styles.push('#nav li:nth-last-child(2) a { border-right: none; }');
 styles.push('#nav li:first-child a { border-left: none; }');
+
 
 // Skip the unneeded .main container
 var main = document.getElementById('main'),
@@ -83,6 +84,31 @@ if (rc) {
 styles.push('#content table tr.oddrowno td, #content table tr.evenrowno td { padding: 4px; }');
 styles.push('#content table tr:nth-child(2n) td { background: #F9F9F9 }');
 styles.push('#content table tr.oddrowno td, #content table tr.evenrowno td { border-bottom: 1px solid #CCC; }');
+
+// Rework the background so it feels a little cleaner
+var imgUrl = document.body.style.backgroundImage;
+document.body.style.background = '';
+
+var bg = document.createElement('div');
+bg.className = 'improvebg';
+var left = document.createElement('div');
+left.className = 'l';
+var center = document.createElement('div');
+center.className = 'c';
+var right = document.createElement('div');
+right.className = 'r';
+
+bg.appendChild(left);
+bg.appendChild(center);
+bg.appendChild(right);
+
+styles.push('body { background: none; }');
+styles.push('.improvebg { position: absolute; top: 0; left: 0; width: 100%; height: 575px; overflow: hidden; }');
+styles.push('.improvebg .l { position: absolute; top: 0; left: 0; width: 40px; height: 575px; background: ' + imgUrl + ' no-repeat; z-index: 1; }');
+styles.push('.improvebg .r { position: absolute; top: 0; right: 0; width: 40px; height: 575px; background: ' + imgUrl + ' -1056px 0 no-repeat; z-index: 1; }');
+styles.push('.improvebg .c { position: absolute; top: 0; left: 50%; width: 1016px; margin-left: -508px; height: 575px; background: ' + imgUrl + ' -40px 0 no-repeat; }');
+
+document.body.insertBefore(bg, document.body.firstChild);
 
 // Inject the new styles
 var s = document.createElement('style');
